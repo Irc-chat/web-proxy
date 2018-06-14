@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IRC chat</title>
+    <meta charset="utf-8"/>
+</head>
+<body>
+
+<!-- HTML -->
+<div class="display-box">
+    <textarea id="display" style="width:100%;height: 100%"></textarea>
+</div>
+
+
+<div class="input-box">
+    <input id="input-to-chat" type="text" size="40" onkeypress="typedSomething(event)"
+           align="bottom" style="width: 100%;">
+</div>
+
+
+<!-- JS -->
+<script>
+
+    var port = 10023;
+    var host = "ec2-35-180-30-241.eu-west-3.compute.amazonaws.com";
+
+    var clientID;
+
+    var socket = new WebSocket("ws://" + host + ":" + port);
+
+    socket.onopen = function (event) {
+        displayText("connected to " + "ws://" + host + ":" + port)
+    };
+
+    socket.onmessage = function (event) {
+        displayText(event.data)
+        var msg = JSON.parse(event.data);
+
+        switch (msg.type) {
+            case "id":
+                clientID = msg.id;
+                break;
+            case "username":
+                break;
+            case "message":
+                displayText(msg.text);
+                break;
+            case "rejectusername":
+                break;
+            case "userlist":
+                break;
+        }
+
+    };
+
+    function displayText(text) {
+        var display = document.getElementById("display");
+        display.append(text + "\n");
+        display.scrollTop = display.scrollHeight;
+    }
+
+    function typedSomething(event) {
+        var code = event.which || event.keyCode;
+        // if enter clicked
+        if (code === 13) {
+            var input = document.getElementById("input-to-chat");
+            displayText(input.value);
+            sendText(input.value);
+            input.value = "";
+        }
+    }
+
+    function sendText(text) {
+        socket.send(text + "\r\n");
+    }
+</script>
+
+<!-- CSS -->
+<style>
+    .input-box {
+        width: 100%;
+        position: absolute;
+        bottom: 10px;
+        border: 3px solid #8AC007;
+    }
+
+    .display-box {
+        width: 100%;
+        height: 90%;
+        position: absolute;
+        top: 10px;
+        border: 3px solid #3671c0;
+    }
+</style>
+
+</body>
+</html>

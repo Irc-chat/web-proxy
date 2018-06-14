@@ -1,5 +1,11 @@
 var net = require('net');
 
+var connect = require('connect');
+var serveStatic = require('serve-static');
+connect().use(serveStatic(__dirname)).listen(10024, function(){
+    console.log('Server running on 10024...');
+});
+
 // create a webscoket server on port 10023
 var WebSocketServer = require('ws').Server,
 wss = new WebSocketServer({
