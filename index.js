@@ -2,7 +2,12 @@ var net = require('net');
 
 // create a webscoket server on port 10023
 var WebSocketServer = require('ws').Server,
-wss = new WebSocketServer({port: 10023})
+wss = new WebSocketServer({
+	port: 10023,
+	ssl: true,
+	ssl_key: 'key.pem',
+  ssl_cert: 'cert.pem'
+})
 wss.on('connection', function (ws) {
 
 	var client = new net.Socket();
