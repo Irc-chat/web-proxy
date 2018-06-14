@@ -13,7 +13,7 @@ wss.on('connection', function (ws) {
 
 	client.on('data', function(data) {
 		console.log('Received: ' + data);
-		ws.send(data)
+		ws.send(data+"")
 	});
 
 	client.on('close', function() {
